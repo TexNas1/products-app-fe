@@ -2,19 +2,30 @@
   <div class="heading-row">
     <h2 class="products-heading">Products List</h2>
     <div class="switch-container">
-      <div class="switch-label">{{ isGridView ? 'Switch to List View' : 'Switch to Grid View' }}</div>
+      <div class="switch-label">
+        {{ isGridView ? "Switch to List View" : "Switch to Grid View" }}
+      </div>
       <label class="switch">
         <input type="checkbox" (click)="toggleView()" />
         <span class="slider"></span>
       </label>
     </div>
   </div>
+  <!-- Grid View -->
   <div *ngIf="isGridView; else listView">
     <div class="grid-container">
       <div class="grid-item" *ngFor="let product of products">
         <div class="card">
           <div class="card-header">
             <h4 class="card-title">{{ product.name }}</h4>
+            <div class="actions">
+              <span class="edit-icon" (click)="editProduct(product.id)">
+                <i class="material-icons">edit</i>
+              </span>
+              <span class="delete-icon" (click)="deleteProduct(product.id)">
+                <i class="material-icons">delete</i>
+              </span>
+            </div>
           </div>
           <div class="card-body">
             <p class="card-text">Price: {{ product.price }}</p>
@@ -25,6 +36,7 @@
     </div>
   </div>
 
+  <!-- Table View -->
   <ng-template #listView>
     <table class="table">
       <thead>
@@ -32,6 +44,7 @@
           <th>Name</th>
           <th>Price</th>
           <th>Description</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -39,6 +52,14 @@
           <td>{{ product.name }}</td>
           <td>{{ product.price }}</td>
           <td>{{ product.description }}</td>
+          <td>
+            <span class="edit-icon" (click)="editProduct(product.id)">
+              <i class="material-icons">edit</i>
+            </span>
+            <span class="delete-icon" (click)="deleteProduct(product.id)">
+              <i class="material-icons">delete</i>
+            </span>
+          </td>
         </tr>
       </tbody>
     </table>
