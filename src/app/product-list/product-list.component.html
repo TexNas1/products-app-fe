@@ -22,7 +22,7 @@
               <span class="edit-icon" (click)="editProduct(product.id)">
                 <i class="material-icons">edit</i>
               </span>
-              <span class="delete-icon" (click)="deleteProduct(product.id)">
+              <span class="delete-icon" (click)="deleteProduct(product)">
                 <i class="material-icons">delete</i>
               </span>
             </div>
@@ -56,7 +56,7 @@
             <span class="edit-icon" (click)="editProduct(product.id)">
               <i class="material-icons">edit</i>
             </span>
-            <span class="delete-icon" (click)="deleteProduct(product.id)">
+            <span class="delete-icon" (click)="deleteProduct(product)">
               <i class="material-icons">delete</i>
             </span>
           </td>
@@ -64,4 +64,21 @@
       </tbody>
     </table>
   </ng-template>
+
+  <!-- On Delete Confirmation Popup -->
+  <div class="confirmation-popup" *ngIf="showConfirmationPopup">
+    <div class="popup-content">
+      <div class="popup-header">
+        <h4>Please Confirm</h4>
+        <span class="close-icon" (click)="cancelDelete()">&times;</span>
+      </div>
+      <div class="popup-text">
+      <p>Are you sure you want to delete this product?</p>
+      <div class="popup-actions">
+        <button class="confirm-button" (click)="confirmDelete()">Delete</button>
+        <button class="cancel-button" (click)="cancelDelete()">Cancel</button>
+      </div>
+    </div>
+    </div>
+  </div>
 </div>

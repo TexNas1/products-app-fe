@@ -7,9 +7,34 @@ import { Product } from '../models/product.model';
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.css']
 })
+
 export class ProductListComponent {
   isGridView: boolean = true;
   constructor(private router: Router) {}
+  showConfirmationPopup: boolean = false;
+  productToDelete: Product | null = null;
+
+  deleteProduct(product: Product) {
+    this.productToDelete = product;
+    this.showConfirmationPopup = true;
+  }
+
+  confirmDelete() {
+    if (this.productToDelete) {
+      // Perform the delete operation here
+      console.log('Deleting product:', this.productToDelete);
+      
+      // Clear the productToDelete and hide the confirmation popup
+      this.productToDelete = null;
+      this.showConfirmationPopup = false;
+    }
+  }
+
+  cancelDelete() {
+    // Clear the productToDelete and hide the confirmation popup
+    this.productToDelete = null;
+    this.showConfirmationPopup = false;
+  }
 
   toggleView() {
     this.isGridView = !this.isGridView;
@@ -17,10 +42,6 @@ export class ProductListComponent {
 
   editProduct(productId: number) {
     this.router.navigate(['/product-detail', productId]);
-  }
-
-  deleteProduct(productId: number) {
-    console.log({productId})
   }
 
   products: Product[] = [
