@@ -1,5 +1,19 @@
 <div class="container">
   <h2>Add Product</h2>
+  <!-- Add success and error messages -->
+  <div
+    class="message-box"
+    [ngClass]="{
+      success: addStatus === 'success',
+      error: addStatus === 'error'
+    }"
+    *ngIf="addStatus === 'error' || addStatus === 'success'"
+  >
+    {{ message }}
+  </div>
+  <div *ngIf="addStatus === 'loading'" class="loading-container">
+    <div class="loader"></div>
+  </div>
   <form [formGroup]="productForm" (ngSubmit)="submitForm()">
     <div class="form-group">
       <label for="name">Name</label>

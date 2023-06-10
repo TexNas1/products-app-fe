@@ -1,6 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { Product } from '../models/product.model';
+import { ProductService } from 'services/product.service';
 
 @Component({
   selector: 'app-add-product',
@@ -9,8 +15,13 @@ import { Product } from '../models/product.model';
 })
 export class AddProductComponent implements OnInit {
   productForm!: FormGroup;
-
-  constructor(private formBuilder: FormBuilder) {}
+  showMessage: boolean = false;
+  message: string = '';
+  addStatus: 'initial' | 'loading' | 'success' | 'error' = 'initial';
+  constructor(
+    private formBuilder: FormBuilder,
+    private productService: ProductService
+  ) {}
 
   ngOnInit() {
     this.productForm = this.formBuilder.group({
@@ -19,7 +30,7 @@ export class AddProductComponent implements OnInit {
         0,
         [
           Validators.required,
-          Validators.pattern('[0-9]+(.[0-9]{1,2})?'),
+          Validators.pattern(/^\d{1,15}(\.\d{1,2})?$/), 
           this.priceGreaterThanZeroValidator,
         ],
       ],
@@ -48,7 +59,7 @@ export class AddProductComponent implements OnInit {
     }
     return '';
   }
-  
+
   priceGreaterThanZeroValidator(control: AbstractControl) {
     const price = control.value;
     if (price <= 0) {
@@ -60,12 +71,31 @@ export class AddProductComponent implements OnInit {
   submitForm() {
     if (this.productForm.valid) {
       const newProduct: Product = {
-        id: 0,
+        id: '0',
         name: this.productForm.value.name,
         price: this.productForm.value.price,
         description: this.productForm.value.description,
       };
-      console.log({ newProduct });
+      this.addStatus = 'loading';
+      this.productService.addProduct(newProduct).subscribe({
+        next: (_response) => {
+          this.addStatus = 'success';
+          this.showMessage = true;
+          this.message = 'Product added successfully!';
+          setTimeout(() => {
+            this.showMessage = false;
+            this.message = '';
+            this.addStatus = 'initial';
+          }, 3000);
+          this.productForm.reset();
+        },
+        error: (error) => {
+          this.addStatus = 'error';
+          this.showMessage = true;
+          this.message = 'Error adding product. Please try again.';
+          console.log(error)
+        },
+      });
     }
   }
 }

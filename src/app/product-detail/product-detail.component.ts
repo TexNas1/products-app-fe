@@ -5,8 +5,9 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Product } from '../models/product.model';
+import { ProductService } from 'services/product.service';
 
 @Component({
   selector: 'app-product-detail',
@@ -15,54 +16,85 @@ import { Product } from '../models/product.model';
 })
 export class ProductDetailComponent implements OnInit {
   productForm!: FormGroup;
-  // productId!: number;
-  // product!: Product;
-  productId: number = 0;
   product: Product | undefined;
-  products: Product[] = [
-    { id: 1, name: 'Product 1', price: 10, description: 'Description 1' },
-    { id: 2, name: 'Product 2', price: 20, description: 'Description 2' },
-    { id: 3, name: 'Product 3', price: 30, description: 'Description 3' },
-  ];
+  productId: string = '0';
+  showMessage: boolean = false;
+  message: string = '';
+  updateStatus: 'initial' | 'loading' | 'success' | 'error' = 'initial';
 
   constructor(
     private formBuilder: FormBuilder,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private productService: ProductService,
+    private router: Router
   ) {}
 
   ngOnInit() {
-    this.productId = +this.route.snapshot.paramMap.get('id')!;
-    // Fetch the product details from bk
-    this.route.params.subscribe((params) => {
-      this.productId = +params['id']; 
-      this.product = this.getProductById(this.productId);
+    this.route.paramMap.subscribe({
+      next: (params) => {
+        const id = params.get('id');
+        if (id) {
+          this.getProductDetails(id);
+          this.productId = id;
+        }
+      },
     });
 
-    // initial values for the form fields
     this.productForm = this.formBuilder.group({
-      name: [
-        this.product?.name,
-        [Validators.required, Validators.maxLength(255)],
-      ],
+      name: ['', [Validators.required, Validators.maxLength(255)]],
       price: [
-        this.product?.price,
+        0,
         [
           Validators.required,
-          Validators.pattern('[0-9]+(.[0-9]{1,2})?'),
+          Validators.pattern(/^\d{1,15}(\.\d{1,2})?$/), 
           this.priceGreaterThanZeroValidator,
         ],
       ],
-      description: [this.product?.description],
+      description: [''],
     });
   }
 
-  getProductById(id: number): Product | undefined {
-    return this.products.find((product) => product.id === id);
+  getProductDetails(id: string) {
+    this.productService.getProductById(id).subscribe((product) => {
+      this.product = product;
+      this.productForm.patchValue({
+        name: product.name,
+        price: product.price,
+        description: product.description,
+      });
+    });
   }
 
-  updateProduct(product: Product) {
-    // update the product
-    console.log('Product updated:', product);
+  updateProduct() {
+    if (this.productForm.valid && this.product) {
+      const updatedProduct: Product = {
+        id: this.productId,
+        name: this.productForm.value.name,
+        price: this.productForm.value.price,
+        description: this.productForm.value.description,
+      };
+
+      this.updateStatus = 'loading';
+      this.productService.updateProduct(updatedProduct).subscribe({
+        next: () => {
+          this.updateStatus = 'success';
+          this.showMessage = true;
+          this.message = 'Product updated successfully!';
+          setTimeout(() => {
+            this.showMessage = false;
+            this.message = '';
+            this.updateStatus = 'initial';
+            this.router.navigate(['/product-list']); 
+          }, 3000);
+        },
+        error: (error) => {
+          console.log('Error updating product:', error);
+          this.updateStatus = 'error';
+          this.showMessage = true;
+          this.message = 'Error updating product. Please try again.';
+        },
+      });
+    }
   }
 
   isFieldInvalid(field: string) {
@@ -93,17 +125,5 @@ export class ProductDetailComponent implements OnInit {
       return { priceGreaterThanZero: true };
     }
     return null;
-  }
-
-  submitForm() {
-    if (this.productForm.valid) {
-      const updatedProduct: Product = {
-        id: this.productId,
-        name: this.productForm.value.name,
-        price: this.productForm.value.price,
-        description: this.productForm.value.description,
-      };
-      console.log({ updatedProduct });
-    }
   }
 }

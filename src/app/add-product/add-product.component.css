@@ -61,3 +61,47 @@ button[disabled] {
   color: red;
   margin-top: 5px;
 }
+
+.message-box {
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.success {
+  background-color: #93f893;
+  color: #006400;
+  border: 1px solid #006400;
+}
+
+.error {
+  background-color: #ff7e7e;
+  color: #8b0000;
+  border: 1px solid #8b0000;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px; /* Adjust the height as needed */
+}
+
+.loader {
+  border: 4px solid #f3f3f3; 
+  border-top: 4px solid #333; 
+  border-radius: 50%;
+  width: 30px; 
+  height: 30px; 
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

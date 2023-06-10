@@ -1,6 +1,20 @@
 <div class="container">
   <h2>Edit Product</h2>
-  <form [formGroup]="productForm" (ngSubmit)="submitForm()">
+  <!-- Add success and error messages -->
+  <div
+    class="message-box"
+    [ngClass]="{
+      success: updateStatus === 'success',
+      error: updateStatus === 'error'
+    }"
+    *ngIf="updateStatus === 'error' || updateStatus === 'success'"
+  >
+    {{ message }}
+  </div>
+  <div *ngIf="updateStatus === 'loading'" class="loading-container">
+    <div class="loader"></div>
+  </div>
+  <form [formGroup]="productForm" (ngSubmit)="updateProduct()">
     <div class="form-group">
       <label for="name">Name</label>
       <input type="text" id="name" formControlName="name" />

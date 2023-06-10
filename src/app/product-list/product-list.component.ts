@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Product } from '../models/product.model';
+import { ProductService } from 'services/product.service';
 
 @Component({
   selector: 'app-product-list',
@@ -8,11 +9,32 @@ import { Product } from '../models/product.model';
   styleUrls: ['./product-list.component.css']
 })
 
-export class ProductListComponent {
+export class ProductListComponent implements OnInit {
   isGridView: boolean = true;
-  constructor(private router: Router) {}
   showConfirmationPopup: boolean = false;
   productToDelete: Product | null = null;
+  products: Product[] = [];
+  getStatus: 'initial' | 'loading' = 'loading';
+
+  constructor(private router: Router, private productService: ProductService) { }
+
+  ngOnInit() {
+    this.fetchProducts();
+  }
+
+  fetchProducts() {
+    this.getStatus = 'loading';
+    this.productService.getProducts().subscribe({
+      next: (response) => {
+        this.products = response;
+        this.getStatus = 'initial';
+      },
+      error: (error) => {
+        console.log('Error fetching products:', error);
+        this.getStatus = 'initial';
+      }
+    });
+  }
 
   deleteProduct(product: Product) {
     this.productToDelete = product;
@@ -21,17 +43,22 @@ export class ProductListComponent {
 
   confirmDelete() {
     if (this.productToDelete) {
-      // Perform the delete operation here
-      console.log('Deleting product:', this.productToDelete);
-      
-      // Clear the productToDelete and hide the confirmation popup
-      this.productToDelete = null;
-      this.showConfirmationPopup = false;
+      this.productService.deleteProduct(this.productToDelete.id).subscribe({
+        next: () => {
+          this.productToDelete = null;
+          this.showConfirmationPopup = false;
+          this.fetchProducts(); 
+        },
+        error: (error) => {
+          console.log('Error deleting product:', error);
+          this.productToDelete = null;
+          this.showConfirmationPopup = false;
+        }
+      });
     }
   }
 
   cancelDelete() {
-    // Clear the productToDelete and hide the confirmation popup
     this.productToDelete = null;
     this.showConfirmationPopup = false;
   }
@@ -40,13 +67,7 @@ export class ProductListComponent {
     this.isGridView = !this.isGridView;
   }
 
-  editProduct(productId: number) {
+  editProduct(productId: string) {
     this.router.navigate(['/product-detail', productId]);
   }
-
-  products: Product[] = [
-    {id: 1, name: 'Product 1', price: 10, description: 'Description 1' },
-    {id: 2, name: 'Product 2', price: 20, description: 'Description 2' },
-    {id: 3, name: 'Product 3', price: 30, description: 'Description 3' },
-  ];
 }

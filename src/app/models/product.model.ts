@@ -2,13 +2,13 @@ import { IsNotEmpty, IsNumber, MaxLength, Min } from 'class-validator';
 
 export class Product {
   constructor() {
-    this.id = 0;
+    this.id = '0';
     this.name = '';
     this.price = 0;
     this.description = '';
   }
 
-  id: number;
+  id: string;
 
   @IsNotEmpty({ message: 'Name is required.' })
   @MaxLength(255, { message: 'Name must be less than 255 characters.' })
