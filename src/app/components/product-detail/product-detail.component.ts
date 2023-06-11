@@ -6,8 +6,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Product } from '../models/product.model';
-import { ProductService } from 'services/product.service';
+import { Product } from '../../models/product.model';
+import { ProductService } from 'src/app/services/product.service';
 
 @Component({
   selector: 'app-product-detail',
@@ -85,7 +85,7 @@ export class ProductDetailComponent implements OnInit {
             this.message = '';
             this.updateStatus = 'initial';
             this.router.navigate(['/product-list']); 
-          }, 3000);
+          }, 2000);
         },
         error: (error) => {
           console.log('Error updating product:', error);

@@ -1,27 +1,64 @@
-# ProductsAppFe
+# products-app-fe
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.0.4.
+This repository contains the frontend code for the products CRUD application. It is developed with Angular and provides a user interface for interacting with the backend API.
 
-## Development server
+## Features
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+- **Create**: Users can add new products by filling out a form with the product details and submitting it.
 
-## Code scaffolding
+- **Read**: Users can view a list of existing products in a grid view (in the form of cards), displaying their names, prices, and descriptions. User can also switch to list view (list products in a tabular format).
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+- **Update**: Users can edit the details of a product by navigating to its details page and modifying the form fields.
 
-## Build
+- **Delete**: Users can remove a product from the system by confirming the deletion action.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+- **Validation**: Form inputs are validated to ensure required fields are filled and appropriate formats are used.
 
-## Running unit tests
+## Project Structure
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+The project follows a component-based architecture in Angular. Here's a brief overview of the main directories:
 
-## Running end-to-end tests
+- `src/app/components`: Contains UI components used throughout the application.
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+- `src/app/models`: Defines TypeScript interfaces for representing product data.
 
-## Further help
+- `src/app/services`: Provides Angular services for interacting with the backend API and handling data operations.
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## Getting Started
+
+To run the frontend locally, follow these steps:
+
+1. Ensure that you have Node.js and npm (Node Package Manager) installed on your machine.
+
+2. Clone this repository to your local machine.
+
+3. Open a terminal or command prompt and navigate to the root directory of the project.
+
+4. Install the dependencies by running the following command:
+```
+npm install
+````
+
+5. Update the API endpoint in the environment configuration file (`src/environments/environment.ts`) to match the URL of your backend API.
+
+6. Start the frontend application:
+```
+ng serve
+```
+7. The frontend application should now be running and accessible at the specified URL.
+
+## Future Enhancements
+
+Here are some potential enhancements for the frontend:
+
+- **Authentication**: Implement user authentication and session management to secure the application and provide personalized experiences.
+
+- **Pagination**: Add pagination support to the product list view to handle large datasets more efficiently.
+
+- **Search and Filtering**: Enable users to search for specific products or filter the product list based on various criteria.
+
+- **Image Upload**: Allow users to upload images for each product and display them in the product details view.
+
+- **Error Handling**: Improve error handling mechanisms to provide more informative error messages and handle different types of errors gracefully.
+
+
