@@ -47,6 +47,19 @@ ng serve
 ```
 7. The frontend application should now be running and accessible at the specified URL.
 
+## Docker
+
+To run the frontend using Docker, you can use the following commands:
+
+1. Build the Docker image:
+```
+docker build -t products-app-fe .
+```
+2. Run the Docker container:
+```
+docker run -p 5321:80 products-app-fe
+```
+The frontend application will be available at `http://localhost:5321`.
 ## Future Enhancements
 
 Here are some potential enhancements for the frontend:
